@@ -13,8 +13,8 @@ c_enum! {
     }
 }
 
-c_enum_no_debug! {
-    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+c_enum! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
     pub enum Software : u64 {
         /// Doc comments
         CPU_CYCLES,
