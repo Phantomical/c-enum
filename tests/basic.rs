@@ -33,3 +33,8 @@ c_enum! {
         ITEM2 = 2
     }
 }
+
+#[test]
+fn duplicates_are_equal() {
+    assert_eq!(Duplicates::ITEM1, Duplicates::ITEM2);
+}
