@@ -116,8 +116,7 @@
 //!
 //! ## Formatting
 //! - [`Debug`], but only if the inner type implements [`PartialEq`] and
-//!   [`Debug`]. You can opt out of this by using the [`c_enum_no_debug!`]
-//!   variant of the macro.
+//!   [`Debug`].
 //!
 //! ## Conversion
 //! - [`From`] to convert from the inner type and vice versa.
