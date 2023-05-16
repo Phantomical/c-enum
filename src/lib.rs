@@ -16,17 +16,15 @@
 //!     }
 //! }
 //!
-//! fn main() {
-//!     let v1 = MyEnum::A;       // declared variant
-//!     let v2 = MyEnum::from(3); // also supports variants that are not declared
+//! let v1 = MyEnum::A;       // declared variant
+//! let v2 = MyEnum::from(3); // also supports variants that are not declared
 //!
-//!     match v1 { // we can match if we derive PartialEq
-//!         MyEnum::A => println!("got an A"),
-//!         MyEnum::B => println!("got a B"),
+//! match v1 { // we can match if we derive PartialEq
+//!     MyEnum::A => println!("got an A"),
+//!     MyEnum::B => println!("got a B"),
 //!
-//!         // We still need to handle other variants
-//!         _ => println!("got another variant"),
-//!     }
+//!     // We still need to handle other variants
+//!     _ => println!("got another variant"),
 //! }
 //! ```
 //!
