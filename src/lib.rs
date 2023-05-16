@@ -194,6 +194,7 @@
 //! [`PartialEq`]: core::cmp::PartialEq
 
 #![no_std]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 extern crate self as c_enum;
 
@@ -383,4 +384,5 @@ macro_rules! __c_enum_impl {
 #[doc = include_str!("example.rs")]
 /// ```
 #[cfg(doc)]
+#[cfg_attr(docsrs, doc(cfg(doc)))]
 pub mod example;
