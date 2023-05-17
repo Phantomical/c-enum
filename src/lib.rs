@@ -1,4 +1,4 @@
-//! A macro for easily defining a c-like rust enum.
+//! A macro for easily defining structs that act like C enums.
 //!
 //! The [`c_enum!`] macro generates structs that behave roughly like a C enum:
 //! they have a set of constants that have integer values but can be assigned
@@ -195,6 +195,10 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 extern crate self as c_enum;
+
+#[cfg(doc)]
+#[doc = include_str!("../README.md")]
+mod readme {}
 
 /// A trait that is automatically implemented for all C enums.
 pub trait CEnum: From<Self::Inner> + Into<Self::Inner> {
