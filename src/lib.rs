@@ -110,8 +110,6 @@
 //! The [`c_enum!`] macro implements some traits by default, but leaves the rest
 //! available for you to choose the semantics of the rest.
 //!
-//! - [`CEnum`] which contains some common methods for all c-like enums.
-//!
 //! ## Formatting
 //! - [`Debug`], but only if the inner type implements [`PartialEq`] and
 //!   [`Debug`].
@@ -200,6 +198,7 @@ extern crate self as c_enum;
 #[doc = include_str!("../README.md")]
 mod readme {}
 
+#[doc(hidden)]
 /// A trait that is automatically implemented for all C enums.
 pub trait CEnum: From<Self::Inner> + Into<Self::Inner> {
     /// The inner type of this enum.
