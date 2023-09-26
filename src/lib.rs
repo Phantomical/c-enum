@@ -294,15 +294,11 @@ macro_rules! __c_enum_no_debug {
             #[allow(non_upper_case_globals)]
             impl $name {
                 $crate::__c_enum_impl!(
-                    impl(decl_variants, $name, $inner)
-                    [ $(
+                    impl(decl_variants, $name, $inner, 0)
+                    $(
                         $( #[$field_attr] )*
                         $field $( = $value )?,
-                    )*]
-                    [
-                        __dummy = 0,
-                        $( $field $( = $value )?, )*
-                    ]
+                    )*
                 );
             }
 
@@ -347,32 +343,25 @@ macro_rules! __c_enum_impl {
         $first
     };
 
+    (impl(decl_variants, $name:ident, $inner:ty, $default:expr)) => {};
     (
-        impl(decl_variants, $name:ident, $inner:ty)
-        [ ]
-        [ $( $__:ident $( = $prev:expr )? ),* $(,)? ]
-    ) => {};
-    (
-        impl(decl_variants, $name:ident, $inner:ty)
-        [
-            $( #[$fattr:meta] )*
-            $field:ident $( = $fvalue:expr )?
-            $( ,
-                $( #[$rattr:meta] )*
-                $frest:ident $( = $frest_val:expr )?
-            )*
-            $(,)?
-        ]
-        [ $prev:ident  $( = $pvalue:expr )? $( , $prest:ident $( = $prest_val:expr )? )* $(,)? ]
+        impl(decl_variants, $name:ident, $inner:ty, $default:expr)
+        $( #[$fattr:meta] )*
+        $field:ident $( = $fvalue:expr )?
+        $( ,
+            $( #[$rattr:meta] )*
+            $frest:ident $( = $frest_val:expr )?
+        )*
+        $(,)?
     ) => {
         $( #[$fattr] )*
         #[allow(non_upper_case_globals)]
-        pub const $field: Self = Self($crate::__c_enum_impl!(impl(first_expr) $( $fvalue, )? $( $pvalue, )? 0));
+        pub const $field: Self = Self($crate::__c_enum_impl!(
+            impl(first_expr) $( $fvalue, )? $default));
 
         $crate::__c_enum_impl!(
-            impl(decl_variants, $name, $inner)
-            [ $( $( #[$rattr] )* $frest $( = $frest_val )?, )* ]
-            [ $( $prest $( = $prest_val )?, )* ]
+            impl(decl_variants, $name, $inner, Self::$field.0 + 1)
+            $( $( #[$rattr] )* $frest $( = $frest_val )?, )*
         );
     }
 }
