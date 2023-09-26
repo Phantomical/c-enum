@@ -326,7 +326,7 @@ macro_rules! __c_enum_no_debug {
                     Self::Inner: PartialEq
                 {
                     Some(match &self.0 {
-                        $( value if Self::$field.0 == *value => ::core::stringify!($name), )*
+                        $( value if Self::$field.0 == *value => ::core::stringify!($field), )*
                         _ => return None,
                     })
                 }
