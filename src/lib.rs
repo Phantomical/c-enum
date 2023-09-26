@@ -117,9 +117,6 @@
 //! ## Conversion
 //! - [`From`] to convert from the inner type and vice versa.
 //!
-//! # Non-Integer Enums
-//! Creating
-//!
 //! # Generated Code
 //! ```
 //! # #[macro_use]
