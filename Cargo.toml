@@ -13,3 +13,7 @@ categories = ["no-std"]
 exclude = [
   ".github"
 ]
+
+[package.metadata.docs.rs]
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs"]
