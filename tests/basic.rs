@@ -38,3 +38,16 @@ c_enum! {
 fn duplicates_are_equal() {
     assert_eq!(Duplicates::ITEM1, Duplicates::ITEM2);
 }
+
+#[test]
+fn verify_variant_label() {
+    assert_eq!(Software::CPU_CYCLES.variant_label(), Some("CPU_CYCLES"));
+}
+
+#[test]
+fn variant_label_duplicate() {
+    // In the case of duplicates the variant that comes first should be the
+    // the one whose label is used.
+    assert_eq!(Duplicates::ITEM1.variant_label(), Some("ITEM1"));
+    assert_eq!(Duplicates::ITEM2.variant_label(), Some("ITEM1"));
+}
