@@ -302,18 +302,21 @@ macro_rules! __c_enum_no_debug {
                 );
             }
 
+            #[automatically_derived]
             impl From<$inner> for $name {
                 fn from(value: $inner) -> Self {
                     Self(value)
                 }
             }
 
+            #[automatically_derived]
             impl From<$name> for $inner {
                 fn from(value: $name) -> Self {
                     value.0
                 }
             }
 
+            #[automatically_derived]
             impl $crate::CEnum for $name {
                 type Inner = $inner;
 
