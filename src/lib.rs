@@ -41,7 +41,9 @@
 //!         pub enum Enum1: u8 {
 //!             A,
 //!         }
+//!     }
 //!
+//!     c_enum! {
 //! #       pub
 //!         enum Enum2: u8 {
 //!             B,
@@ -213,52 +215,48 @@ pub trait CEnum: From<Self::Inner> + Into<Self::Inner> {
 #[macro_export]
 macro_rules! c_enum {
     {
-        $(
-            $( #[$attr:meta] )*
-            $vis:vis enum $name:ident : $inner:ty {
-                $(
-                    $( #[ $field_attr:meta ] )*
-                    $field:ident $( = $value:expr )?
-                ),* $(,)?
-            }
-        )+
+        $( #[$attr:meta] )*
+        $vis:vis enum $name:ident : $inner:ty {
+            $(
+                $( #[ $field_attr:meta ] )*
+                $field:ident $( = $value:expr )?
+            ),* $(,)?
+        }
     } => {
-        $(
-            $crate::__c_enum_no_debug! {
-                $( #[$attr] )*
-                $vis enum $name : $inner {
-                    $(
-                        $( #[ $field_attr ] )*
-                        $field $( = $value )?
-                    ),*
+        $crate::__c_enum_no_debug! {
+            $( #[$attr] )*
+            $vis enum $name : $inner {
+                $(
+                    $( #[ $field_attr ] )*
+                    $field $( = $value )?
+                ),*
+            }
+        }
+
+        impl ::core::fmt::Debug for $name
+        where
+            $inner: ::core::fmt::Debug,
+            $inner: ::core::cmp::PartialEq
+        {
+            fn fmt(
+                &self,
+                f: &mut ::core::fmt::Formatter<'_>
+            ) -> ::core::fmt::Result {
+                use $crate::CEnum;
+
+                match self.variant_label() {
+                    Some(variant) => {
+                        f.write_fmt(::core::format_args!(
+                            "{}::{}", ::core::stringify!($name), variant
+                        ))
+                    },
+                    None => f
+                        .debug_tuple(::core::stringify!($name))
+                        .field(&self.0)
+                        .finish()
                 }
             }
-
-            impl ::core::fmt::Debug for $name
-            where
-                $inner: ::core::fmt::Debug,
-                $inner: ::core::cmp::PartialEq
-            {
-                fn fmt(
-                    &self,
-                    f: &mut ::core::fmt::Formatter<'_>
-                ) -> ::core::fmt::Result {
-                    use $crate::CEnum;
-
-                    match self.variant_label() {
-                        Some(variant) => {
-                            f.write_fmt(::core::format_args!(
-                                "{}::{}", ::core::stringify!($name), variant
-                            ))
-                        },
-                        None => f
-                            .debug_tuple(::core::stringify!($name))
-                            .field(&self.0)
-                            .finish()
-                    }
-                }
-            }
-        )+
+        }
     };
 }
 
@@ -274,60 +272,56 @@ macro_rules! c_enum {
 #[doc(hidden)]
 macro_rules! __c_enum_no_debug {
     {
-        $(
-            $( #[$attr:meta] )*
-            $vis:vis enum $name:ident : $inner:ty {
-                $(
-                    $( #[ $field_attr:meta ] )*
-                    $field:ident $( = $value:expr )?
-                ),* $(,)?
-            }
-        )+
+        $( #[$attr:meta] )*
+        $vis:vis enum $name:ident : $inner:ty {
+            $(
+                $( #[ $field_attr:meta ] )*
+                $field:ident $( = $value:expr )?
+            ),* $(,)?
+        }
     } => {
-        $(
-            $( #[$attr] )*
-            $vis struct $name(pub $inner);
+        $( #[$attr] )*
+        $vis struct $name(pub $inner);
 
-            #[allow(non_upper_case_globals)]
-            impl $name {
-                $crate::__c_enum_impl!(
-                    impl(decl_variants, $name, $inner, 0)
-                    $(
-                        $( #[$field_attr] )*
-                        $field $( = $value )?,
-                    )*
-                );
+        #[allow(non_upper_case_globals)]
+        impl $name {
+            $crate::__c_enum_impl!(
+                impl(decl_variants, $name, $inner, 0)
+                $(
+                    $( #[$field_attr] )*
+                    $field $( = $value )?,
+                )*
+            );
+        }
+
+        #[automatically_derived]
+        impl From<$inner> for $name {
+            fn from(value: $inner) -> Self {
+                Self(value)
             }
+        }
 
-            #[automatically_derived]
-            impl From<$inner> for $name {
-                fn from(value: $inner) -> Self {
-                    Self(value)
-                }
+        #[automatically_derived]
+        impl From<$name> for $inner {
+            fn from(value: $name) -> Self {
+                value.0
             }
+        }
 
-            #[automatically_derived]
-            impl From<$name> for $inner {
-                fn from(value: $name) -> Self {
-                    value.0
-                }
+        #[automatically_derived]
+        impl $crate::CEnum for $name {
+            type Inner = $inner;
+
+            fn variant_label(&self) -> Option<&'static str>
+            where
+                Self::Inner: PartialEq
+            {
+                Some(match &self.0 {
+                    $( value if Self::$field.0 == *value => ::core::stringify!($field), )*
+                    _ => return None,
+                })
             }
-
-            #[automatically_derived]
-            impl $crate::CEnum for $name {
-                type Inner = $inner;
-
-                fn variant_label(&self) -> Option<&'static str>
-                where
-                    Self::Inner: PartialEq
-                {
-                    Some(match &self.0 {
-                        $( value if Self::$field.0 == *value => ::core::stringify!($field), )*
-                        _ => return None,
-                    })
-                }
-            }
-        )+
+        }
     };
 }
 
