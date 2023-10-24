@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- `c_enum!` will now emit a custom error message indicating that declaring
+  multiple enums in a single `c_enum!` block is not supported anymore.
 
 ## 0.2.0 - 2023-10-23
 ### Added
