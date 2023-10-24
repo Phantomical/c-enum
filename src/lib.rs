@@ -168,7 +168,7 @@
 //! #
 //! #[repr(transparent)]
 //! #[derive(Copy, Clone, PartialEq, Eq, Hash)]
-//! struct Enum(u32);
+//! struct Enum(pub u32);
 //!
 //! impl Enum {
 //!     pub const A: Self = Self(0);
