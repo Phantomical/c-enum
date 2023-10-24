@@ -1,6 +1,6 @@
 [package]
 name = "c-enum"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 rust-version = "1.56"
 description = "A macro to generate c-like enums."
