@@ -253,6 +253,9 @@ macro_rules! c_enum {
             $( #[$iattr:meta] )*
             impl {}
         )?
+
+        // Capture part of a potential next entry in order to emit a better error.
+        $( $evis:vis enum $($error:tt)+ )?
     } => {
         $crate::__c_enum_no_debug! {
             $( #[$attr] )*
@@ -293,6 +296,16 @@ macro_rules! c_enum {
                 }
             }
         }
+
+        $(
+            $crate::__expects_no_input! {
+                $evis enum $($error)+
+            }
+
+            compile_error!(
+                "Declaring multiple enums using a single c_enum! macro block is no longer supported",
+            );
+        )?
     };
 }
 
@@ -400,6 +413,15 @@ macro_rules! __c_enum_impl {
             $( $( #[$rattr] )* $frest $( = $frest_val )?, )*
         );
     }
+}
+
+/// Helper macro to emit a "no rules expected the token `...`" error message.
+///
+/// We use this mainly to emit proper error messages when the user provides
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __expects_no_input {
+    {} => {};
 }
 
 // This needs to be after all the macro definitions.
