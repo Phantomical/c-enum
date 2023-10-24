@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- `c_enum!` will now emit the error message about multiple declarations in a
+  block in most cases matching needing to be migrated to v0.2.0.
 
 ## 0.2.1 - 2023-10-23
 ### Changed
