@@ -223,6 +223,8 @@ extern crate self as c_enum;
 #[doc = include_str!("../README.md")]
 mod readme {}
 
+mod decl_variants;
+
 #[doc(hidden)]
 /// A trait that is automatically implemented for all C enums.
 pub trait CEnum: From<Self::Inner> + Into<Self::Inner> {
@@ -358,8 +360,8 @@ macro_rules! __c_enum_no_debug {
         #[allow(non_upper_case_globals)]
         $( $( #[$iattr] )* )?
         impl $name {
-            $crate::__c_enum_impl!(
-                impl(decl_variants, $name, $inner, 0)
+            $crate::__c_enum_decl_variants!(
+                impl($name, $inner, 0)
                 $(
                     $( #[$field_attr] )*
                     $field $( = $value )?,
@@ -424,28 +426,6 @@ macro_rules! __c_enum_expects_impl_or_nothing {
 macro_rules! __c_enum_impl {
     (impl(first_expr) $first:expr $( , $rest:expr )*) => {
         $first
-    };
-
-    (impl(decl_variants, $name:ident, $inner:ty, $default:expr)) => {};
-    (
-        impl(decl_variants, $name:ident, $inner:ty, $default:expr)
-        $( #[$fattr:meta] )*
-        $field:ident $( = $fvalue:expr )?
-        $( ,
-            $( #[$rattr:meta] )*
-            $frest:ident $( = $frest_val:expr )?
-        )*
-        $(,)?
-    ) => {
-        $( #[$fattr] )*
-        #[allow(non_upper_case_globals)]
-        pub const $field: Self = Self($crate::__c_enum_impl!(
-            impl(first_expr) $( $fvalue, )? $default));
-
-        $crate::__c_enum_impl!(
-            impl(decl_variants, $name, $inner, Self::$field.0 + 1)
-            $( $( #[$rattr] )* $frest $( = $frest_val )?, )*
-        );
     }
 }
 
