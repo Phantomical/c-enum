@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.2.3 - 2024-02-07
+## Fixed
+- `c_enum!` can now handle enums with more than 128 variants without hitting
+  the macro recursion limit. Enums with more than 10k variants will still hit
+  it eventually but this is less likely to be an issue for most.
+
 ## 0.2.2 - 2023-10-23
 ### Changed
 - `c_enum!` will now emit the error message about multiple declarations in a
