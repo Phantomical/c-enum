@@ -424,9 +424,9 @@ macro_rules! __c_enum_expects_impl_or_nothing {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! __c_enum_impl {
-    (impl(first_expr) $first:expr $( , $rest:expr )*) => {
+    (impl(first_expr) $first:expr $(, $rest:expr)*) => {
         $first
-    }
+    };
 }
 
 // This needs to be after all the macro definitions.
